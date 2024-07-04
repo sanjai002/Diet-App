@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Health Site</title>
+    <!-- Bootstrap CSS link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS link -->
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <script src="https://kit.fontawesome.com/2450afc501.js" crossorigin="anonymous"></script>
+    <style>
+        /* Global styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Styles for specific sections */
+        .section {
+            padding: 40px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section h2 {
+            font-weight: bold;
+            color: #206a5d;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .section p {
+            color: #777;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .section img {
+            border-radius: 10px;
+            width: 30rem;
+            height: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Styles for the cards section */
+        .cards-section {
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .cards-section h2 {
+            font-weight: bold;
+            color: #206a5d;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .cards-section .carousel-control-prev,
+        .cards-section .carousel-control-next {
+            color: #206a5d;
+            background-color: transparent;
+            border: none;
+        }
+
+        .cards-section .carousel-control-prev-icon,
+        .cards-section .carousel-control-next-icon {
+            font-size: 3rem;
+        }
+
+        .cards-section .carousel-control-prev:hover,
+        .cards-section .carousel-control-next:hover {
+            background-color: transparent;
+        }
+
+        .cards-section .carousel-item {
+            display: none;
+        }
+
+        .cards-section .carousel-item.active {
+            display: block;
+        }
+
+        .cards-section .carousel-inner {
+            display: flex;
+        }
+
+        .cards-section .carousel-item {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .cards-section .card {
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .cards-section .card:hover {
+            transform: scale(1.05);
+            z-index: 1;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .cards-section .card img {
+            border-radius: 15px 15px 0 0;
+            width: 100%;
+            height: auto;
+        }
+
+        .cards-section .card-body {
+            padding: 15px;
+        }
+
+        .cards-section .card-title {
+            color: #206a5d;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .cards-section .card-text {
+            color: #777;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Additional styles for the slider */
+        .food-slider {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .food-slider .carousel-inner {
+            display: flex;
+        }
+
+        .food-slider .carousel-item {
+            flex: 0 0 20%;
+            /* Display 5 items at a time */
+            max-width: 20%;
+        }
+
+
+
+        .show-more-btn:hover {
+            background-color: #3caea3;
+            border-color: #3caea3;
+        }
+
+        /* Style for next and previous buttons */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 5%;
+            color: #206a5d;
+            background-color: #fff;
+            opacity: 0.7;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            opacity: 1;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            font-size: 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Featured Foods Section -->
+    <div class="container cards-section mb-4 text-center">
+        <h2>Featured Foods</h2>
+        <div class="food-slider">
+            <div id="foodCardSlider" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Use Django template syntax to iterate over your food data -->
+                    {% for food in foods %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <img src="{{ food.image }}" class="card-img-top" alt="{{ food.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ food.name }}</h5>
+                                        <p class="card-text">{{ food.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#foodCardSlider"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#foodCardSlider"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+        
+        <button id="showMoreButton" class="btn btn-sm btn-success text-center">Show More</button> <!-- Utilizing Bootstrap classes -->
+    </div>
+    <!-- ... Your existing code ... -->
+    <div class="container">
+        <!-- Section 1: Blood Donation -->
+        <div class="section" style="background-color: #fff;">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <img src="../static/images/bloodonate.jpg" alt="Blood Donation Image" class="section-img">
+                </div>
+                <div class="col-lg-6 section-content">
+                    <h2>Blood Drive</h2>
+                    <p>Contribute to saving lives through blood donations.</p>
+                    <button class="btn btn-success d-block mx-auto">Donate Blood</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: AI Disease Prediction -->
+        <div class="section" style="background-color: #f8f9fa;">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2">
+                    <img src="../static/images/heart.jpg"
+                        alt="Disease Prediction Image" class="section-img">
+                </div>
+                <div class="col-lg-6 section-content order-lg-1">
+                    <h2>AI Health Insights</h2>
+                    <p>Gain insights into future health trends and preventive measures.</p>
+                    <button class="btn btn-success d-block mx-auto">Explore Insights</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Health Diet Chatbot -->
+        <div class="section" style="background-color: #fff;">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <img src="../static/images/chatbot_img.jpg" alt="Health Diet Chatbot Image"
+                        class="section-img">
+                </div>
+                <div class="col-lg-6 section-content">
+                    <h2>Dietary Assistant</h2>
+                    <p>Interact with our AI-powered chatbot for personalized dietary guidance.</p>
+                    <button class="btn btn-success d-block mx-auto">Get Dietary Advice</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Food Calorie Tracker -->
+        <div class="section" style="background-color: #f8f9fa;">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2">
+                    <img src="../static/images/diet.jpg" alt="Food Calorie Tracker Image"
+                        class="section-img">
+                </div>
+                <div class="col-lg-6 section-content order-lg-1">
+                    <h2>Calorie Tracker</h2>
+                    <p>Monitor daily calorie intake and stay on track with your health goals.</p>
+                    <button class="btn btn-success d-block mx-auto">Track Calories</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+    <!-- Your custom script with AJAX (assuming you'll fetch more foods) -->
+    <script>
+        // Assuming an AJAX call to fetch more foods
+        $('#showMoreButton').click(function () {
+            // Perform an AJAX call to get more foods and append to the food slider
+            // Update the carousel-inner with new food cards
+        });
+    </script>
+</body>
+
+</html>

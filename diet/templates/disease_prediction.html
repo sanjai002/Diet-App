@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+  .form-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    transition: opacity 0.5s ease;
+  }
+
+  .form-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .nav-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .nav-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .nav-button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Animation */
+  .form-section {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .form-section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="form-container">
+        <div class="nav-buttons">
+          <button class="nav-button" onclick="showForm(2)">Diabetes Detection</button>
+          <button class="nav-button" onclick="showForm(3)">Heart Disease Prediction</button>
+          <button class="nav-button" onclick="showForm(4)">Malnutrition Prediction</button>
+        </div>
+        <div class="form-section active">
+          <div class="form-title">
+            <h2>Diabetes Detection</h2>
+          </div>
+          <form id="diabetes-form">
+            {% csrf_token %}
+            <div class="form-group">
+              {% if details.gender == 'female' %}
+                <label for="pregnancies" title="Number of times pregnant.">Pregnancies</label>
+                <input type="number" step="1" class="form-control" id="pregnancies" placeholder="Enter number of pregnancies" name="pregnancies" required>
+              {% else %}
+                 <input type="hidden" name="pregnancies" value="0">
+              {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="glucose" title="Plasma glucose concentration a 2 hours in an oral glucose tolerance test.">Glucose</label>
+                <input type="number" step="0.01" class="form-control" id="glucose" placeholder="Enter glucose level (70-200 mg/dL)" name="glucose" required>
+            </div>
+            <div class="form-group">
+                <label for="blood_pressure" title="Diastolic blood pressure (mm Hg)">Blood Pressure</label>
+                <input type="number" step="1" class="form-control" id="blood_pressure" placeholder="Enter blood pressure (60-200 mm Hg)" name="blood_pressure" required>
+            </div>
+            <div class="form-group">
+                <label for="skin_thickness" title="Triceps skin fold thickness (mm)">Skin Thickness</label>
+                <input type="number" step="0.01" class="form-control" id="skin_thickness" placeholder="Enter skin thickness (10-50 mm)" name="skin_thickness" required>
+            </div>
+            <div class="form-group">
+                <label for="insulin" title="2-Hour serum insulin (mu U/ml)">Insulin</label>
+                <input type="number" step="0.01" class="form-control" id="insulin" placeholder="Enter insulin level (5-200 mu U/ml)" name="insulin" required>
+            </div>
+            <div class="form-group">
+                <label for="diabetes_pedigree_function" title="Diabetes pedigree function">Diabetes Pedigree Function</label>
+                <input type="number" step="0.01" class="form-control" id="diabetes_pedigree_function" placeholder="Enter diabetes pedigree function (0.1-2.5)" name="diabetes_pedigree_function" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <div id="diabetes-result" class="form-result fs-5 font-weight-bold text-danger"></div>
+                <div id="diabetes-chance" class="form-result fs-5 font-weight-bold  text-danger"></div>
+           </form>
+      </div>
+      </div>
+      <div class="form-section">
+        <div class="form-title">
+          <h2>Heart Disease Prediction</h2>
+        </div>
+        <form id="heart-disease-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="cp" title="Chest pain type.">Chest Pain Type (cp)</label>
+            <input type="number" class="form-control" id="cp" placeholder="Enter chest pain type (1-4)" name="cp" required>
+          </div>
+          <div class="form-group">
+            <label for="trestbps" title="Resting blood pressure.">Resting Blood Pressure (trestbps)</label>
+            <input type="number" class="form-control" id="trestbps" placeholder="Enter resting blood pressure (90-200 mm Hg)" name="trestbps" required>
+          </div>
+          <div class="form-group">
+            <label for="chol" title="Serum cholesterol.">Serum Cholesterol (chol)</label>
+            <input type="number" class="form-control" id="chol" placeholder="Enter serum cholesterol (100-400 mg/dL)" name="chol" required>
+          </div>
+          <div class="form-group">
+            <label for="fbs" title="Fasting Blood Sugar">Fasting Blood Sugar (fbs)</label>
+            <input type="number" class="form-control" id="chol" placeholder="Enter Fasting Blood sugar (70-300 mg/dL)" name="fbs" required>
+          </div>
+          <div class="form-group">
+            <label for="restecg" title="Resting electrocardiographic results.">Resting Electrocardiographic Results (restecg)</label>
+            <input type="number" class="form-control" id="restecg" placeholder="Enter resting electrocardiographic results (0-2)" name="restecg" required>
+          </div>
+          <div class="form-group">
+            <label for="thalach" title="Maximum heart rate achieved.">Maximum Heart Rate Achieved (thalach)</label>
+            <input type="number" class="form-control" id="thalach" placeholder="Enter maximum heart rate achieved (50-220 bpm)" name="thalach" required>
+          </div>
+          <div class="form-group">
+            <label for="exang" title="Exercise induced angina.">Exercise Induced Angina (exang)</label>
+            <input type="number" class="form-control" id="exang" placeholder="Enter exercise induced angina (0 or 1)" name="exang" required>
+          </div>
+          <div class="form-group">
+            <label for="oldpeak" title="ST depression induced by exercise relative to rest.">ST Depression Induced by Exercise Relative to Rest (oldpeak) </label>
+            <input type="number" class="form-control"  step="0.01"  id="oldpeak" placeholder="Enter ST depression induced by exercise relative to rest (0-6)" name="oldpeak" required>
+          </div>
+          <div class="form-group">
+            <label for="slope" title="Slope of the peak exercise ST segment.">Slope of the Peak Exercise ST Segment (slope)</label>
+            <input type="number" class="form-control" id="slope" placeholder="Enter slope of the peak exercise ST segment (0-2)" name="slope" required>
+          </div>
+          <div class="form-group">
+            <label for="ca" title="Number of major vessels colored by fluoroscopy.">Number of Major Vessels (0-3) Colored by Flourosopy (ca)</label>
+            <input type="number" min="0" max="3" class="form-control" id="ca" placeholder="Enter number of major vessels colored by fluoroscopy" name="ca" required>
+          </div>
+          <div class="form-group">
+            <label for="thal" title="Thalassemia.">Thalassemia (thal)</label>
+            <input type="number" class="form-control" id="thal" placeholder="Enter thalassemia (1-3)" name="thal" required>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <div id="heart-disease-result" class="form-result fs-5 font-weight-bold diabetes-result text-danger"></div>
+            <div id="heart-disease-chance" class="form-result fs-5 font-weight-bold diabetes-result text-danger"></div>
+        </div>
+        </form>
+      </div>
+      <div class="form-section">
+        <div class="form-title">
+          <h2>Malnutrition Prediction</h2>
+        </div>
+          <form id="malnutrition-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="upload-image" title="Upload an image">Upload Image</label>
+              <input type="file" class="form-control" id="upload-image" name="image" accept="image/*" required>
+              <img src="#" alt="Uploaded Image" id="uploaded-image" style="max-width: 100%; margin-top: 10px; display: none;">
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <div id="malnutrition-result" class="form-result fs-5 font-weight-bold text-danger"></div>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Function to handle form submission for diabetes detection
+    $('#diabetes-form').submit(function (event) {
+      event.preventDefault(); // Prevent the form from submitting traditionally
+
+      // Gather form data
+      var formData = $(this).serialize();
+
+      // Send AJAX request
+      $.ajax({
+        url: '{% url "diabetics_prediction" %}',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          // Display prediction result
+          $('#diabetes-result').text(response.message);
+          $('#diabetes-chance').text('Chance of diabetes: ' + response.chance_diabetes);
+          $("#diabetes-form")[0].reset();
+        },
+        error: function (xhr, status, error) {
+          console.error('Error fetching prediction data');
+        }
+      });
+    });
+
+    // Function to handle form submission for heart disease prediction
+    $('#heart-disease-form').submit(function (event) {
+      event.preventDefault(); // Prevent the form from submitting traditionally
+
+      // Gather form data
+      var formData = $(this).serialize();
+
+      // Send AJAX request
+      $.ajax({
+        url: '{% url "heart_disease_prediction" %}',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          // Display prediction result
+          $('#heart-disease-result').text(response.message);
+          $('#heart-disease-chance').text('Chance of heart disease: ' + response.chance_heart_disease);
+          $("#heart-disease-form")[0].reset();
+        },
+        error: function (xhr, status, error) {
+          console.error(formData)
+          console.error('Error fetching prediction data');
+        }
+      });
+    });
+
+  });
+
+  function showForm(formNumber) {
+    // Hide all forms
+    var forms = document.querySelectorAll('.form-section');
+    forms.forEach(function (form) {
+      form.classList.remove('active');
+    });
+
+    // Show the selected form
+    document.querySelector('.form-section:nth-child(' + formNumber + ')').classList.add('active');
+  }
+  $('#upload-image').change(function () {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      $('#uploaded-image').attr('src', e.target.result).show();
+    };
+    reader.readAsDataURL(this.files[0]);
+  });
+
+  // Function to handle form submission for malnutrition prediction
+  $('#malnutrition-form').submit(function (event) {
+    event.preventDefault(); // Prevent the form from submitting traditionally
+
+    // Gather form data
+    var formData = new FormData(this);
+
+    // Send AJAX request
+    $.ajax({
+      url: '{% url "malnutrition_prediction" %}',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        // Display prediction result
+        $('#malnutrition-result').text(response.message);
+       
+      },
+      error: function (xhr, status, error) {
+        console.error('Error fetching prediction data');
+      }
+    });
+  });
+</script>
+{% endblock %}

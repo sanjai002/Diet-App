@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<style>
+    body {
+        font-family: 'Open Sans', sans-serif;
+        background-color: #f3f5f7;
+    }
+
+    .search-food {
+        background-image: url("/static/images/food2.jpg");
+        height: 300px;
+        width: 100%;
+        background-size: cover;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        box-shadow: 0 3000px rgba(20, 19, 19, 0.4) inset;
+    }
+
+    .search-food-items {
+        padding-top: 80px;
+        padding-left: 350px;
+    }
+
+    h1 {
+        color: #ffffff;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #searchForm {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #searchContainer {
+        position: relative;
+    }
+
+    #searchInput {
+        width: 500px;
+        padding: 10px;
+        border-radius: 20px;
+        border: 2px solid #ffffff;
+        font-size: 20px;
+        font-weight: bold;
+        outline: none;
+        opacity: 80%;
+    }
+
+    #searchInput::placeholder {
+        color: #ccc;
+    }
+
+    #searchInput:focus {
+        display: block;
+    }
+
+
+    .food-card {
+        background-color: #fff;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        border-radius: 10px;
+
+    }
+
+    #foodList a{
+        text-decoration: none;
+    }
+
+    .food-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .food-img {
+        width: 100%;
+        height: 200px;
+    }
+
+   
+
+    
+
+    .food-title {
+        color: #4caf50;
+        font-weight: bold;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .food-text {
+        margin-bottom: 10px;
+        color: #666;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 30px;
+    }
+</style>
+
+<body>
+    <div class="search-food position-relative">
+        <div class="search-food-items position-absolute">
+            <h1 class="text-center">Discover Delicious Foods</h1>
+            <!-- Search form -->
+            <form id="searchForm">
+                <!-- Add a container for the search input and clear button -->
+                <div id="searchContainer">
+                    <input type="search" id="searchInput" placeholder="Search...">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Food list section -->
+        <div id="foodList" class="row row-cols-1 row-cols-md-4 g-4 mt-4">
+        </div>
+        <nav aria-label="Food list pagination">
+            <ul class="pagination" id="foodPagination">
+                <!-- Pagination links will be displayed here using AJAX -->
+            </ul>
+        </nav>
+    </div>
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var foodDetailsUrl = "{% url 'food_details' 0 %}";
+        $(document).ready(function () {
+            fetchFoods('all');
+
+            // Function to handle food search
+            $('#searchForm').on('submit', function (e) {
+                e.preventDefault(); // Prevent form submission and page reload
+                var searchQuery = $('#searchInput').val().trim();
+                // Perform the search
+                if (searchQuery === '') {
+                    // Call the function when the search box is empty
+                    fetchFoods('all')
+                }
+                else {
+                    fetchFoods(searchQuery);
+                }
+
+
+            });
+
+            function fetchFoods(options) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'search_food/',
+                    dataType: 'json',
+                    data: {
+                        q: options,
+                    },
+                    success: function (response) {
+                        displayFoods(response.data);
+
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                    }
+                });
+            }
+
+            // Function to display foods
+            function displayFoods(foods) {
+                var foodList = $('#foodList');
+                foodList.empty();
+                $.each(foods, function (index, food) {
+                    var foodCard = `
+                <div class="col">
+                    <a href="${foodDetailsUrl.replace('0', food.id)}">
+                    <div class="card h-100 food-card">
+                            <img src="${food.image}" class="card-img-top img-fluid food-img" >                        <div class="card-body">
+                            <h5 class="card-title food-title">${food.food_name}</h5>
+                            <div class="card-text">
+                                    <p class="food-text">Calories: ${food.calories}</p>
+                                    <p class="food-text">Protein: ${food.protein}</p>
+                                    <p class="food-text">Carbohydrates: ${food.carbohydrates}</p>
+                                    <p class="food-text">Fat: ${food.fat}</p>                   
+                                    <p class="food-text">Allergies: ${food.allergies}</p>
+                                    <p class="food-text">Category: ${food.category}</p>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                    `;
+                    foodList.append(foodCard);
+                });
+            }
+        });
+    </script>
+</body>
+
+{% endblock %}

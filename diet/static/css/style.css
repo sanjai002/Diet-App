@@ -1,0 +1,120 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+}
+
+/* Styles for specific sections */
+.section {
+    padding: 40px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+.section:hover {
+    transform: translateY(-5px);
+}
+.section h2 {
+    font-weight: bold;
+    color: #206a5d;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+
+.section p {
+    color: #777;
+    font-size: 18px;
+    text-align: center;
+}
+.section img {
+    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+/* Styles for the cards section */
+.cards-section {
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.navbar {
+    background-color: #206a5d;
+}
+
+.navbar-brand {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.navbar-nav {
+    gap: 15px;
+}
+
+.nav-link {
+    color: #fff;
+    font-weight: 500;
+}
+
+.btn-login {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-login:hover {
+    background-color: #fff;
+    color: #206a5d;
+    transform: scale(1.1);
+}
+
+.dropdown-menu {
+    animation: slideDown 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.footer {
+    position: sticky;
+    top: 100%;
+    left: 0;
+    background-color: #206a5d;
+    color: #fff;
+
+}
+
+.footer h5 {
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.footer p {
+    color: #ccc;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer hr {
+    border-top: 1px solid #3caea3;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}

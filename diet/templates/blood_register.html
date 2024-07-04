@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    .container-ls {
+        max-width: 900px;
+        margin: 50px auto;
+        padding-bottom: 50px;
+    }
+
+    .search-section {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .floating-registration {
+        margin-top: 5px;
+        left: 0;
+        width: 100%;
+        background-color: #0d4e42;
+        color: #fff;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .floating-registration h2,
+    .floating-registration p {
+        margin-bottom: 5px;
+    }
+
+    .floating-registration .register-link {
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #206a5d;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .floating-registration .register-link:hover {
+        background-color: #185249;
+        color: #fff;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+        background-color: #206a5d;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #185249;
+    }
+
+    .alert-container {
+        position: fixed;
+        top: 0px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050;
+        width: 300px;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <div class="floating-registration">
+        <p>Join us in saving lives! Your donation can make a significant impact. Register as a blood donor today and be
+            a hero in someone's life.</p>
+        <a href="#" class="register-link" data-bs-toggle="modal" data-bs-target="#registerModal">Register as a Blood
+            Donor</a>
+    </div>
+    <div class="container-ls">
+
+        <div class="search-section">
+            <h2 class="mb-4 text-center">Search Blood Donors</h2>
+            <form id="searchForm" action="{% url 'blood_list' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="bloodGroup" class="form-label">Blood Group</label>
+                    <select class="form-select" id="bloodGroupReq" name="group" >
+                        <option selected disabled>Select Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="locationReq" name="location" >
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Search Donors</button>
+                </div>
+            </form>
+
+            <div class="result-table mt-4">
+                <h4 class="text-center mb-3">Search Results</h4>
+                <table id="results" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Blood Group</th>
+                            <th>Location</th>
+                            <th>Contact</th>
+                        </tr>
+                        {% for blood in bg_list %}
+                        <tr>
+                            <td>{{ blood.name }}</td>
+                            <td>{{ blood.blood_group }}</td>
+                            <td>{{ blood.location }}</td>
+                            <td>{{ blood.mobile }}</td>
+                        </tr>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade " id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="registerModalLabel">Register as Blood Donor</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bloodGroupReg" class="form-label">Blood Group</label>
+                            <select class="form-select" id="blood_group" required>
+                                <option selected disabled>Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mobile" class="form-label">Mobile Number</label>
+                            <input type="tel" class="form-control" id="mobile" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" id="submitForm" class="btn btn-success mt-3">Register Now</button>
+                        </div>
+                        <div class="alert-container"></div> 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".register-link").click(function (e) {
+                e.preventDefault();
+                resetFormValidation();
+                $('#registerModal').modal('show');
+            });
+
+
+            $('#submitForm').click(function () {
+                resetFormValidation();
+
+                var hasValidationError = false;
+
+                var formData = {};
+
+                $('form#registerForm input, form#registerForm select').each(function () {
+                    var value = $(this).val();
+                    var key = $(this).attr('id');
+
+                    if (value.trim() === '') {
+                        hasValidationError = true;
+                        displayError("All fields are required.");
+                        return false; 
+                    }
+
+                    if (key === 'mobile') {
+                        var mobileRegex = /^\d{10}$/;
+                        if (!mobileRegex.test(value)) {
+                            hasValidationError = true;
+                            displayError("Please enter a valid 10-digit mobile number.");
+                            return false; 
+                        }
+                    }
+
+                    formData[key] = value;
+                });
+
+                if (hasValidationError) {
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/blood_register/',
+                    data: formData, 
+                    success: function (response) {
+
+                        alert('Registration successful! Thank you for joining.');
+                        location.reload();
+
+
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        displayError('An error occurred. Please try again later.');
+                    }
+                });
+            });
+
+            $('#registerModal').on('hidden.bs.modal', function () {
+                resetFormValidation();
+                $('#registerForm')[0].reset();
+            });
+
+            function displayError(message) {
+                $('.alert-container').html('<div class="alert alert-danger" role="alert">' + message + '</div>');
+            }
+
+            function resetFormValidation() {
+                $('.alert-container').empty();
+            }
+        });
+    </script>
+{% endblock %}
