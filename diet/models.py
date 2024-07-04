@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     def __str__(self):
         return f'{self.username}'
-    
 
 class UserDetails(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
